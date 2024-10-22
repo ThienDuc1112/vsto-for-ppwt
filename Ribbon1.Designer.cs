@@ -82,6 +82,9 @@
             this.group8 = this.Factory.CreateRibbonGroup();
             this.btnSplitPP = this.Factory.CreateRibbonButton();
             this.btnCombinePp = this.Factory.CreateRibbonButton();
+            this.btnAddShape = this.Factory.CreateRibbonButton();
+            this.group9 = this.Factory.CreateRibbonGroup();
+            this.btnAddChart = this.Factory.CreateRibbonButton();
             this.tab1.SuspendLayout();
             this.group1.SuspendLayout();
             this.group2.SuspendLayout();
@@ -92,6 +95,7 @@
             this.group7.SuspendLayout();
             this.DocumentOperation.SuspendLayout();
             this.group8.SuspendLayout();
+            this.group9.SuspendLayout();
             this.SuspendLayout();
             // 
             // tab1
@@ -324,6 +328,7 @@
             // DocumentOperation
             // 
             this.DocumentOperation.Groups.Add(this.group8);
+            this.DocumentOperation.Groups.Add(this.group9);
             this.DocumentOperation.Label = "Document Operation";
             this.DocumentOperation.Name = "DocumentOperation";
             // 
@@ -331,6 +336,7 @@
             // 
             this.group8.Items.Add(this.btnSplitPP);
             this.group8.Items.Add(this.btnCombinePp);
+            this.group8.Items.Add(this.btnAddShape);
             this.group8.Label = "group8";
             this.group8.Name = "group8";
             // 
@@ -345,6 +351,24 @@
             this.btnCombinePp.Label = "Combine 2 files";
             this.btnCombinePp.Name = "btnCombinePp";
             this.btnCombinePp.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnCombinePp_Click);
+            // 
+            // btnAddShape
+            // 
+            this.btnAddShape.Label = "Add Shape";
+            this.btnAddShape.Name = "btnAddShape";
+            this.btnAddShape.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnAddShape_Click);
+            // 
+            // group9
+            // 
+            this.group9.Items.Add(this.btnAddChart);
+            this.group9.Label = "group9";
+            this.group9.Name = "group9";
+            // 
+            // btnAddChart
+            // 
+            this.btnAddChart.Label = "Add Chart";
+            this.btnAddChart.Name = "btnAddChart";
+            this.btnAddChart.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnAddChart_Click);
             // 
             // Ribbon1
             // 
@@ -373,6 +397,8 @@
             this.DocumentOperation.PerformLayout();
             this.group8.ResumeLayout(false);
             this.group8.PerformLayout();
+            this.group9.ResumeLayout(false);
+            this.group9.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -413,6 +439,9 @@
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup group8;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btnSplitPP;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btnCombinePp;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton btnAddShape;
+        internal Microsoft.Office.Tools.Ribbon.RibbonGroup group9;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton btnAddChart;
     }
 
     partial class ThisRibbonCollection

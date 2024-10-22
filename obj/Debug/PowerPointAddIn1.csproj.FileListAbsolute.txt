@@ -128,3 +128,4 @@ D:\studying\self-learning\vsto\PowerPointAddIn1\bin\Debug\System.ValueTuple.xml
 D:\studying\self-learning\vsto\PowerPointAddIn1\bin\Debug\ZString.xml
 D:\studying\self-learning\vsto\PowerPointAddIn1\obj\Debug\PowerPointAddIn1.Ribbon2.resources
 D:\studying\self-learning\vsto\PowerPointAddIn1\obj\Debug\PowerPointAddIn1.combineFilesForm.resources
+D:\studying\self-learning\vsto\PowerPointAddIn1\obj\Debug\PowerPointAddIn1.UserControl1.resources

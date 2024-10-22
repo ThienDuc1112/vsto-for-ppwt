@@ -10,19 +10,11 @@ using System.Windows.Forms;
 
 namespace PowerPointAddIn1
 {
-    public partial class noteForm : Form
+    public partial class UserControl1 : UserControl
     {
-        public string Note { get; set; }
-        public noteForm()
+        public UserControl1()
         {
             InitializeComponent();
         }
-
-        private void btnSubmit_Click(object sender, EventArgs e)
-        {
-            Note = tbNote.Text;
-            this.DialogResult = DialogResult.OK;
-            this.Close();        }
-
     }
 }

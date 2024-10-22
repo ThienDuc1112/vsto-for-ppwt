@@ -12,11 +12,10 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Microsoft.CSharp.RuntimeBinder;
 using Microsoft.Office.Interop.PowerPoint;
-using System.Data.Common;
-using System.Security.Policy;
-using System.Text;
-using static System.Net.Mime.MediaTypeNames;
-using System.Linq;
+using XlChartType = Microsoft.Office.Core.XlChartType;
+using System.Data;
+using Excel = Microsoft.Office.Interop.Excel;
+using System.Runtime.Remoting;
 
 namespace PowerPointAddIn1
 {
@@ -928,26 +927,159 @@ namespace PowerPointAddIn1
         //}
 
         private void CopyBackground(PowerPoint.Slide sourceSlide, PowerPoint.Slide targetSlide)
-    {
-        if (sourceSlide.Background.Fill.Type == Office.MsoFillType.msoFillPicture)
         {
-            string picturePath = "";
-            if (sourceSlide.Shapes.Count > 0)
+            if (sourceSlide.Background.Fill.Type == Office.MsoFillType.msoFillPicture)
             {
-                PowerPoint.Shape backgroundShape = sourceSlide.Shapes[1];
-                if (backgroundShape.Fill.Type == Office.MsoFillType.msoFillPicture)
+                string picturePath = "";
+                if (sourceSlide.Shapes.Count > 0)
                 {
-                    backgroundShape.Copy();
-                    targetSlide.FollowMasterBackground = Microsoft.Office.Core.MsoTriState.msoFalse;
-                    targetSlide.Shapes.Paste();
+                    PowerPoint.Shape backgroundShape = sourceSlide.Shapes[1];
+                    if (backgroundShape.Fill.Type == Office.MsoFillType.msoFillPicture)
+                    {
+                        backgroundShape.Copy();
+                        targetSlide.FollowMasterBackground = Microsoft.Office.Core.MsoTriState.msoFalse;
+                        targetSlide.Shapes.Paste();
+                    }
                 }
             }
+            else
+            {
+                MessageBox.Show("The source slide does not have a picture background.");
+            }
         }
-        else
-        {
-            MessageBox.Show("The source slide does not have a picture background.");
-        }
-    }
 
-}
+        private void btnAddShape_Click(object sender, RibbonControlEventArgs e)
+        {
+            PowerPoint.Application app = Globals.ThisAddIn.Application;
+            Slide slide = app.ActivePresentation.Slides.Add(app.ActivePresentation.Slides.Count + 1, PpSlideLayout.ppLayoutBlank);
+
+            slide.Shapes.AddShape(Office.MsoAutoShapeType.msoShapeRectangle, 50, 100, 200, 100);
+            slide.Shapes.AddShape(Office.MsoAutoShapeType.msoShapeQuadArrowCallout, 50, 250, 200, 100);
+        }
+
+        private void btnAddChart_Click(object sender, RibbonControlEventArgs e)
+        {
+
+            GEN_VSTO_Chart();
+        }
+        public static void GEN_VSTO_Chart()
+
+        {
+            PowerPoint.Application objPPT = Globals.ThisAddIn.Application;
+            Presentation objPres = objPPT.ActivePresentation;
+
+            Slide objSlide = objPPT.ActivePresentation.Slides.Add(objPPT.ActivePresentation.Slides.Count + 1, PpSlideLayout.ppLayoutBlank);
+
+            //Select firs slide and set its layout
+
+            objSlide.Select();
+
+            objSlide.Layout = Microsoft.Office.Interop.PowerPoint.PpSlideLayout.ppLayoutBlank;
+
+            if (objSlide != null)
+            {
+                PowerPoint.Chart chart = objSlide.Shapes.AddChart2(-1,
+          XlChartType.xl3DColumn, // Use PowerPoint's XlChartType
+          20F, 30F, 400F, 300F, true).Chart;
+
+                //Access the added chart
+
+                Microsoft.Office.Interop.PowerPoint.Chart ppChart = objSlide.Shapes[1].Chart;
+
+                //Access the chart data
+
+                Microsoft.Office.Interop.PowerPoint.ChartData chartData = ppChart.ChartData;
+
+                //Create instance to Excel workbook to work with chart data
+
+                Microsoft.Office.Interop.Excel.Workbook dataWorkbook = (Microsoft.Office.Interop.Excel.Workbook)chartData.Workbook;
+
+                //Accessing the data worksheet for chart
+
+                Microsoft.Office.Interop.Excel.Worksheet dataSheet = dataWorkbook.Worksheets[1];
+
+                //Setting the range of chart
+
+                Microsoft.Office.Interop.Excel.Range tRange = dataSheet.Cells.get_Range("A1", "B5");
+
+                //Applying the set range on chart data table
+
+                Microsoft.Office.Interop.Excel.ListObject tbl1 = dataSheet.ListObjects["Table1"];
+
+                tbl1.Resize(tRange);
+
+                //Setting values for categories and respective series data
+
+                ((Microsoft.Office.Interop.Excel.Range)(dataSheet.Cells.get_Range("A2"))).FormulaR1C1 = "Bikes";
+
+                ((Microsoft.Office.Interop.Excel.Range)(dataSheet.Cells.get_Range("A3"))).FormulaR1C1 = "Accessories";
+
+                ((Microsoft.Office.Interop.Excel.Range)(dataSheet.Cells.get_Range("A4"))).FormulaR1C1 = "Repairs";
+
+                ((Microsoft.Office.Interop.Excel.Range)(dataSheet.Cells.get_Range("A5"))).FormulaR1C1 = "Clothing";
+
+                ((Microsoft.Office.Interop.Excel.Range)(dataSheet.Cells.get_Range("B2"))).FormulaR1C1 = "1000";
+
+                ((Microsoft.Office.Interop.Excel.Range)(dataSheet.Cells.get_Range("B3"))).FormulaR1C1 = "2500";
+
+                ((Microsoft.Office.Interop.Excel.Range)(dataSheet.Cells.get_Range("B4"))).FormulaR1C1 = "4000";
+
+                ((Microsoft.Office.Interop.Excel.Range)(dataSheet.Cells.get_Range("B5"))).FormulaR1C1 = "3000";
+
+                //Setting chart title
+
+                ppChart.ChartTitle.Font.Italic = true;
+
+                ppChart.ChartTitle.Text = "2007 Sales";
+
+                ppChart.ChartTitle.Font.Size = 18;
+
+                ppChart.ChartTitle.Font.Color = Color.Black.ToArgb();
+
+                ppChart.ChartTitle.Format.Line.Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
+
+                ppChart.ChartTitle.Format.Line.ForeColor.RGB = Color.Black.ToArgb();
+
+                //Accessing Chart value axis
+
+                Microsoft.Office.Interop.PowerPoint.Axis valaxis = ppChart.Axes(Microsoft.Office.Interop.PowerPoint.XlAxisType.xlValue, Microsoft.Office.Interop.PowerPoint.XlAxisGroup.xlPrimary);
+
+                //Setting values axis units
+
+                valaxis.MajorUnit = 2000.0F;
+
+                valaxis.MinorUnit = 1000.0F;
+
+                valaxis.MinimumScale = 0.0F;
+
+                valaxis.MaximumScale = 4000.0F;
+
+                //Accessing Chart Depth axis
+
+                Microsoft.Office.Interop.PowerPoint.Axis Depthaxis = ppChart.Axes(Microsoft.Office.Interop.PowerPoint.XlAxisType.xlSeriesAxis, Microsoft.Office.Interop.PowerPoint.XlAxisGroup.xlPrimary);
+
+                Depthaxis.Delete();
+
+                //Setting chart rotation
+
+                ppChart.Rotation = 20; //Y-Value
+
+                ppChart.Elevation = 15; //X-Value
+
+                ppChart.RightAngleAxes = false;
+
+                // Save the presentation as a PPTX
+
+                objPres.SaveAs("VSTOSampleChart", Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsDefault, MsoTriState.msoTrue);
+
+                //Close Workbook and presentation
+
+                dataWorkbook.Application.Quit();
+
+                objPres.Application.Quit();
+            }     
+
+        }
+
+    }
 }

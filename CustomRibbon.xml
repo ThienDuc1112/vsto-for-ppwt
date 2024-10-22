@@ -1,0 +1,7 @@
+﻿<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui">
+	<contextMenus>
+		<contextMenu idMso="ContextMenuText">
+			<button id="myButton" label="My New Button" onAction="OnMyButtonClick" />
+		</contextMenu>
+	</contextMenus>
+</customUI>
